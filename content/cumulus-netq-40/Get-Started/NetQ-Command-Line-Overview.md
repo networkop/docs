@@ -5,7 +5,7 @@ weight: 160
 toc: 3
 ---
 
-The NetQ CLI provides access to all of the network state and event information collected by the NetQ Agents. It behaves the same way most CLIs behave, with groups of commands used to display related information, the ability to use TAB completion when entering commands, and to get help for given commands and options. The commands are grouped into four categories: check, show, config, and trace.
+The NetQ CLI provides access to all network state and event information collected by the NetQ Agents. It behaves the same way most CLIs behave, with groups of commands used to display related information, the ability to use TAB completion when entering commands, and to get help for given commands and options. The commands are grouped into four categories: check, show, config, and trace.
 
 {{<notice note>}}
 
@@ -19,6 +19,7 @@ When NetQ is installed or upgraded, the CLI may also be installed  and enabled o
 
 To access the CLI from a switch or server:
 
+<!-- vale off -->
 1. Log in to the device. This example uses the default username of *cumulus* and a hostname of *switch*.
 
     ```
@@ -43,6 +44,7 @@ To access the CLI from a switch or server:
     cumulus@switch:~$ netq show agents
     cumulus@switch:~$ netq check bgp
     ```
+<!-- vale on -->
 
 ## Command Line Basics
 
@@ -122,7 +124,6 @@ cumulus@switch:~$ netq check <<press Tab>>
     clag        :  Cumulus Multi-chassis LAG
     evpn        :  EVPN
     interfaces  :  network interface port
-    license     :  License information
     mlag        :  Multi-chassis LAG (alias of clag)
     mtu         :  Link MTU
     ntp         :  NTP
@@ -135,7 +136,7 @@ cumulus@switch:~$ netq check
 
 ### Command Help
 
-As you enter commands, you can get help with command syntax by entering `help` at various points within a command entry. For example, to find out what options are available for a BGP check, enter `help` after entering a portion of the `netq check` command. In this example, you can see that there are no additional required parameters and three optional parameters, `hostnames`, `vrf` and `around`, that can be used with a BGP check.
+As you enter commands, you can get help with command syntax by entering `help` at various points within a command entry. For example, to find out what options are available for a BGP check, enter `help` after entering some of the `netq check` command. In this example, you can see that there are no additional required parameters and three optional parameters, `hostnames`, `vrf` and `around`, that can be used with a BGP check.
 
 ```
 cumulus@switch:~$ netq check bgp help
@@ -180,7 +181,6 @@ The `netq` `check` commands enable the network administrator to validate the cur
 - **cl-version**: Cumulus Linux version
 - **evpn**: EVPN (Ethernet Virtual Private Network) operation
 - **interfaces**: network interface port operation
-- **license**: License status
 - **mlag**: Cumulus MLAG (multi-chassis LAG/link aggregation) operation
 - **mtu**: Link MTU (maximum transmission unit) consistency across paths
 - **ntp**: NTP (Network Time Protocol) operation
@@ -479,7 +479,7 @@ netq config add cli server api.netq.cumulusnetworks.com access-key <user-access-
 
 #### NetQ System Configuration Commands
 
-A number of commands are provided for managing the NetQ system itself. These include:
+The following commands are provided for managing the NetQ system itself:
 
 - **bootstrap**: Loads the installation program onto the network switches and hosts in either a single server or server cluster arrangement.
 - **decommission**: Decommissions a switch or host.
@@ -518,7 +518,9 @@ Successfully added/updated channel pd-netq-events
 
 Refer to {{<link title="Configure System Event Notifications">}} for details about using these commands and additional examples.
 
+<!-- vale off -->
 #### Threshold-based Event Notification Commands
+<!-- vale on -->
 
 NetQ supports a set of events that are triggered by crossing a user-defined threshold, called {{<link title="Configure Threshold-Based Event Notifications" text="TCA events">}}. You configure and manage TCA events using the following commands:
 

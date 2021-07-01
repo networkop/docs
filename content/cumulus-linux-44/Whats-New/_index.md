@@ -12,29 +12,32 @@ This document supports the Cumulus Linux 4.4 release, and lists new platforms an
 
 ## What's New in Cumulus Linux 4.4
 
-Cumulus Linux 4.4 supports provides bug fixes, and contains several new features and improvements.
+Cumulus Linux 4.4 supports supports new platforms, provides bug fixes, and contains several new features and improvements.
+
+### New Platforms
+
+- NVIDIA SN3700C-S (100G Spectrum-2) with Secure Boot
 
 ### New Features and Enhancements
 
-<!-- - {{<link url="NVIDIA-User-Experience-NVUE" text="NVIDIA User Experience (NVUE)">}} is a new object-oriented, schema driven model of a complete Cumulus Linux system (hardware and software) with a robust API that allows multiple interfaces to both view and configure any element within the system. NVUE replaces the NCLU command line interface.
-
-{{<notice info>}}
-NVUE is created from the ground up and does not inherit any previous functionality from NCLU. Certain features are not yet supported by NVUE. If you are an NCLU user, confirm that your features are fully supported in NVUE before upgrading to Cumulus Linux 5.0. If you use a feature that is not yet supported, you can either remain on your current 4.x release or perform all your switch configuration using Linux and vtysh commands.
-{{</notice>}} -->
-
-- {{<link url="NVIDIA-User-Experience-NVUE" text="NVIDIA User Experience (NVUE)">}} is a new object-oriented, schema driven model of a complete Cumulus Linux system (hardware and software) with a robust API that allows multiple interfaces to both view and configure any element within the system. NVUE is an early access feature currently in BETA and open to customer feedback.
+- {{<link url="NVIDIA-User-Experience-NVUE" text="NVIDIA User Experience (NVUE)">}} is a new object-oriented, schema driven model of a complete Cumulus Linux system (hardware and software) with a robust API that allows multiple interfaces to both view and configure any element within the system. NVUE provides both a CLI and an API.
+{{%notice note%}}
+The NVUE commands and outputs are subject to change.
+{{%/notice%}}
 - {{<link url="VLAN-aware-Bridge-Mode/" text="Multiple VLAN-aware bridges">}}
 - {{<link url="VXLAN-Devices/#single-vxlan-device" text="Single VXLAN Devices">}}
+- {{<link url="Inter-subnet-Routing/#downstream-vni" text="Downstream VNI (symmetric EVPN route leaking)">}}
 - {{<link url="EVPN-Multihoming" text="EVPN multihoming Head End Replication">}}
 - {{<link url="Precision-Time-Protocol-PTP" text="PTP Boundary Clock">}} enhancements
 - {{<link url="Protocol-Independent-Multicast-PIM/#allow-rp" text="PIM Allow RP">}}
 - {{<link url="Optional-BGP-Configuration/#conditional-advertisement" text="BGP conditional route advertisement">}}
-- Smart System Manager supports {{<link url="Smart-System-Manager" text="warm boot">}}
-- QoS: Dynamic buffer configuration as default
 - {{<link url="IGMP-and-MLD-Snooping/#optimized-multicast-flooding-omf" text="Optimized Multicast Flooding (OMF)">}}
-- Support for QinQ/QinVNI access and trunk ports on the same system
-- On NVIDIA Spectrum switches, you now have the ability to {{<link url="Hybrid-Cloud-Connectivity-with-QinQ-and-VXLANs" text="modify the inner tag in double-tagged packets ">}}
-- A specific software license key is no longer required to enable the `switchd` service.
+- Smart System Manager {{<link url="Smart-System-Manager" text="warm boot">}}
+- {{<link url="Installing-a-New-Cumulus-Linux-Image/#secure-boot" text="Secure Boot">}}
+- {{<link url="Quality-of-Service" text="QoS enhancements ">}} (`traffic.conf` and `datapath.conf` files removed and replaced)
+- {{<link url="Hybrid-Cloud-Connectivity-with-QinQ-and-VXLANs" text="QinQ Double-tagged translation ">}} is now supported on switches with the Spectrum-2 and Spectrum-3 ASIC
+- ZTP enhancements include {{<link url="Zero-Touch-Provisioning-ZTP/#dhcp-on-front-panel-ports" text="DHCP on front panel ports">}}, the ability to {{<link url="Zero-Touch-Provisioning-ZTP/#continue-provisioning" text="continue provisioning after executing the script locally">}}, and improved logging
+- A specific software license key is no longer required to enable the `switchd` service. For more information, refer to [Licensing in Cumulus Linux 44 and Later]({{<ref "/knowledge-base/Installing-and-Upgrading/Installation/Licensing-in-Cumulus-Linux-44-and-Later" >}}).
 
 ### Unsupported Platforms
 

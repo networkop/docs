@@ -64,10 +64,10 @@ You must have sudoer permission to properly configure switches when using the SS
 
 2. Copy the SSH *public* key to each switch that you want to upgrade using one of the following methods:
 
-    - Manually copy the the SSH public key to the */home/\<USER\>/.ssh/authorized_keys* file on each switch, or
+    - Manually copy the SSH public key to the */home/\<USER\>/.ssh/authorized_keys* file on each switch, or
     - Run `ssh-copy-id USER@<switch_ip>` on the server where the SSH key pair was generated for each switch
 
-3. Copy the SSH *private* key into the text box in the Create Switch Access card.
+3. Copy the SSH *private* key into the entry field in the Create Switch Access card.
 
     {{<figure src="/images/netq/lcm-access-create-SSH-300.png" width="250">}}
 
@@ -113,7 +113,7 @@ You must have sudoer permission to properly configure switches when using the SS
 
 2. Copy the SSH *public* key to each switch that you want to upgrade using one of the following methods:
 
-    - Manually copy the the SSH public key to the */home/\<USER\>/.ssh/authorized_keys* file on each switch, or
+    - Manually copy the SSH public key to the */home/\<USER\>/.ssh/authorized_keys* file on each switch, or
     - Run `ssh-copy-id USER@<switch_ip>` on the server where the SSH key pair was generated for each switch
 
 3. Add these credentials to the switch.
@@ -130,17 +130,17 @@ You must have sudoer permission to properly configure switches when using the SS
 
 You can view the type of credentials being used to access your switches in the NetQ UI. You can view the details of the credentials using the NetQ CLI.
 
-{{< tabs "TabID133" >}}
+{{<tabs "TabID133" >}}
 
-{{< tab "NetQ UI" >}}
+{{<tab "NetQ UI" >}}
 
 1. Open the LCM dashboard.
 
 2. On the Access card, either **Basic** or **SSH** is indicated.
 
-{{< /tab >}}
+{{</tab>}}
 
-{{< tab "NetQ CLI" >}}
+{{<tab "NetQ CLI" >}}
 
 To see the credentials, run `netq lcm show credentials`.
 
@@ -162,9 +162,9 @@ Type             SSH Key        Username         Password         Last Changed
 BASIC                           cumulus          **************   Tue Apr 28 19:10:27 2020
 ```
 
-{{< /tab >}}
+{{</tab>}}
 
-{{< /tabs >}}
+{{</tabs>}}
 
 ## Modify Switch Credentials
 
@@ -172,9 +172,9 @@ You can modify your switch access credentials at any time. You can change betwee
 
 To change your access credentials:
 
-{{< tabs "TabID175" >}}
+{{<tabs "TabID175" >}}
 
-{{< tab "NetQ UI" >}}
+{{<tab "NetQ UI" >}}
 
 1. Open the LCM dashboard.
 
@@ -195,9 +195,9 @@ Refer to {{<link title="#Specify Switch Credentials" text="Specify Switch Creden
 
 5. Click **Save**.
 
-{{< /tab >}}
+{{</tab>}}
 
-{{< tab "NetQ CLI" >}}
+{{<tab "NetQ CLI" >}}
 
 To change the basic authentication credentials, run the add credentials command with the new username and/or password. This example changes the password for the cumulus account created above:
 
@@ -219,7 +219,7 @@ You must have sudoer permission to properly configure switches when using the SS
 
 2. Copy the SSH *public* key to each switch that you want to upgrade using one of the following methods:
 
-    - Manually copy the the SSH public key to the */home/\<USER\>/.ssh/authorized_keys* file on each switch, or
+    - Manually copy the SSH public key to the */home/\<USER\>/.ssh/authorized_keys* file on each switch, or
     - Run `ssh-copy-id USER@<switch_ip>` on the server where the SSH key pair was generated for each switch
 
 3. Add these new credentials to the switch.
@@ -228,12 +228,12 @@ You must have sudoer permission to properly configure switches when using the SS
     cumulus@switch:~$ netq lcm add credentials ssh-key PUBLIC_SSH_KEY
     ```
 
-{{< /tab >}}
+{{</tab>}}
 
-{{< /tabs >}}
+{{</tabs>}}
 
 ## Remove Switch Credentials
 
-You can remove the access credentials for switches using the NetQ CLI. Note that without valid credentials, you will not be able to upgrade your switches.
+You can remove the access credentials for switches using the NetQ CLI. Note that without valid credentials, you cannot upgrade your switches.
 
 To remove the credentials, run `netq lcm del credentials`. Verify they are removed by running `netq lcm show credentials`.

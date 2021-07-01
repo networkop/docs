@@ -5,7 +5,7 @@ weight: 20
 toc: 4
 ---
 
-A number of commands have changed in this release to accommodate the addition of new options or to simplify their syntax. Additionally, new commands have been added and others have been removed. A summary of those changes is provided here.
+Many commands have changed in this release to accommodate the addition of new options or to simplify their syntax. Additionally, new commands have been added and others have been removed. A summary of those changes is provided here.
 
 ## New Commands
 
@@ -45,4 +45,5 @@ The following table summarizes the commands that have been removed in this relea
 | Updated Command | Version |
 | --------------- | ------- |
 | netq check license | 4.0.0 |
+| netq show license | 4.0.0 |
 | netq show unit-tests license | 4.0.0 |

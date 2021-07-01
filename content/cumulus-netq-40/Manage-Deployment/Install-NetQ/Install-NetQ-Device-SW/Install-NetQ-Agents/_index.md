@@ -162,18 +162,27 @@ synchronised to NTP server (104.194.8.227) at stratum 3
 
 To install the NetQ Agent you need to install `netq-agent` on each switch or host. This is available from the NVIDIA networking repository.
 
-To obtain the NetQ Agent package, edit the `/etc/apt/sources.list` file to add the repository for NetQ.
+*Note that NetQ has a separate repository from SONiC.*
 
-```
-admin@switch:~$ sudo nano /etc/apt/sources.list
-...
-deb [arch=amd64] http://apps3.cumulusnetworks.com/repos/deb buster netq-4.0
-...
-```
+To obtain the NetQ Agent package:
+
+1. Install the `wget` utility so you can install the GPG keys in step 3.
+
+       admin@switch:~$ sudo apt-get update
+       admin@switch:~$ sudo apt-get install wget -y
+1. Edit the `/etc/apt/sources.list` file to add the SONiC repository:
+
+       admin@switch:~$ sudo vi /etc/apt/sources.list
+       ...
+       deb http://apps3.cumulusnetworks.com/repos/deb buster netq-latest
+       ...
+1. Add the SONiC repo key:
+
+       admin@switch:~$ sudo wget -qO - http://apps3.cumulusnetworks.com/setup/cumulus-apps-deb.pubkey | sudo apt-key add -
 
 {{</tab>}}
 
-{{<tab "RHEL 7or CentOS">}}
+{{<tab "RHEL 7 or CentOS">}}
 
 ### Verify Service Package Versions
 
@@ -308,7 +317,7 @@ If NTP is not already installed and configured, follow these steps:
 
 2. Configure the network time server.
 
-   {{< tabs "TabID0" >}}
+   {{<tabs "TabID0" >}}
 
 {{<tab "Use NTP Configuration File" >}}
 
@@ -335,9 +344,9 @@ If you are running NTP in your out-of-band management network with VRF, specify 
           2a00:7600::41    .STEP.          16 u    - 1024    0    0.000    0.000   0.000
           \*129.250.35.250 249.224.99.213   2 u  101  128  377   14.588   -0.299   0.243
 
-   {{< /tab >}}
+   {{</tab>}}
 
-   {{< tab "Use Chrony (Ubuntu 18.04 only)" >}}
+   {{<tab "Use Chrony (Ubuntu 18.04 only)" >}}
 
    1. Install chrony if needed.
 
@@ -404,9 +413,9 @@ If you are running NTP in your out-of-band management network with VRF, specify 
           Update interval : 115.2 seconds
           Leap status     : Normal
 
-{{</tab >}}
+{{</tab>}}
 
-{{</tabs >}}
+{{</tabs>}}
 
 ### Obtain NetQ Agent Software Package
 
@@ -422,8 +431,8 @@ root@ubuntu:~# sudo wget -O- https://apps3.cumulusnetworks.com/setup/cumulus-app
 
 2. Add the Ubuntu repository:
 
-    {{< tabs "TabID2" >}}
-{{< tab "Ubuntu 16.04" >}}
+    {{<tabs "Get NetQ Agent Package" >}}
+{{<tab "Ubuntu 16.04" >}}
 
 Create the file `/etc/apt/sources.list.d/cumulus-host-ubuntu-xenial.list` and add the following line:
 
@@ -434,7 +443,7 @@ deb [arch=amd64] https://apps3.cumulusnetworks.com/repos/deb xenial netq-latest
 ...
 ```
 
-{{</tab >}}
+{{</tab>}}
 
 {{<tab "Ubuntu 18.04" >}}
 
@@ -447,9 +456,9 @@ deb [arch=amd64] https://apps3.cumulusnetworks.com/repos/deb bionic netq-latest
 ...
 ```
 
-{{</tab >}}
+{{</tab>}}
 
-{{</tabs >}}
+{{</tabs>}}
 
     {{<notice note>}}
 The use of <code>netq-latest</code> in these examples means that a <code>get</code> to the repository always retrieves the latest version of NetQ, even in the case where a major version update has been made. If you want to keep the repository on a specific version - such as <code>netq-4.0</code> - use that instead.

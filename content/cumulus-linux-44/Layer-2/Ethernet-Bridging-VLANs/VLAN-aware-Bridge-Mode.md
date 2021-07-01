@@ -4,7 +4,7 @@ author: NVIDIA
 weight: 430
 toc: 4
 ---
-The VLAN-aware mode in Cumulus Linux implements a configuration model for large-scale layer 2 environments, with **one single instance** of {{<link url="Spanning-Tree-and-Rapid-Spanning-Tree-STP" text="spanning tree protocol">}}. Each physical bridge member port is configured with the list of allowed VLANs as well as its port VLAN ID, either primary VLAN Identifier (PVID) or native VLAN. MAC address learning, filtering and forwarding are *VLAN-aware*. This significantly reduces the configuration size, and eliminates the large overhead of managing the port and VLAN instances as subinterfaces, replacing them with lightweight VLAN bitmaps and state updates.
+VLAN-aware bridge mode in Cumulus Linux implements a configuration model for large-scale layer 2 environments, with *one single instance* of {{<link url="Spanning-Tree-and-Rapid-Spanning-Tree-STP" text="spanning tree protocol">}}. Each physical bridge member port is configured with the list of allowed VLANs as well as its port VLAN ID, either primary VLAN Identifier (PVID) or native VLAN. MAC address learning, filtering and forwarding are *VLAN-aware*. This significantly reduces the configuration size, and eliminates the large overhead of managing the port and VLAN instances as subinterfaces, replacing them with lightweight VLAN bitmaps and state updates.
 
 On NVIDIA Spectrum-2 and Spectrum-3 switches, Cumulus Linux supports multiple VLAN-aware bridges but with the following limitations:
 
@@ -13,7 +13,7 @@ On NVIDIA Spectrum-2 and Spectrum-3 switches, Cumulus Linux supports multiple VL
 - The same VNIs cannot appear in multiple VLAN-aware bridges
 - VLAN translation is not supported with multiple VLAN-aware bridges
 - Double tagged VLAN interfaces are not supported with multiple VLAN-aware bridges
-- You cannot associate multiple single virtual devices (SVDs) with a single VLAN-aware bridge
+- You cannot associate multiple single VXLAN devices (SVDs) with a single VLAN-aware bridge
 - IGMPv3 is not supported
 
 ## Configure a VLAN-aware Bridge
@@ -191,7 +191,7 @@ NVIDIA Spectrum switches currently support a maximum of 6000 VLAN elements. The 
 
 ## Reserved VLAN Range
 
-For hardware data plane internal operations, the switching silicon requires VLANs for every physical port, Linux bridge, and layer 3 subinterface. Cumulus Linux reserves a range of VLANs by default; the reserved range is 3750-3999.
+For hardware data plane internal operations, the switching silicon requires VLANs for every physical port, Linux bridge, and layer 3 subinterface. Cumulus Linux reserves a range of VLANs by default; the reserved range is 3725-3999.
 
 {{%notice tip%}}
 If the reserved VLAN range conflicts with any user-defined VLANs, you can modify the range. The new range must be a contiguous set of VLANs with IDs between 2 and 4094. For a single VLAN-aware bridge, the minimum size of the range is two VLANs.
@@ -201,14 +201,14 @@ To configure the reserved range, edit the `/etc/cumulus/switchd.conf` file to un
 
 ## VLAN Pruning
 
-By default, the bridge port inherits the bridge VIDs. To configure a port to override the bridge VIDs:
+By default, the bridge port inherits the bridge VIDs, however, you can configure a port to override the bridge VIDs.
 
 {{< img src = "/images/cumulus-linux/ethernet-bridging-vlan-pruned1.png" >}}
 
+This example commands configure swp3 to override the bridge VIDs:
+
 {{< tabs "TabID157 ">}}
 {{< tab "NCLU Commands ">}}
-
-The following example commands configure swp3 to override the bridge VIDs:
 
 ```
 cumulus@switch:~$ net add bridge bridge ports swp1-3
@@ -258,7 +258,7 @@ cumulus@switch:~$ ifreload -a
 {{< /tab >}}
 {{< /tabs >}}
 
-## Untagged/Access Ports
+## Access Ports and Tagged Packets
 
 Access ports ignore all tagged packets. In the configuration below, swp1 and swp2 are configured as access ports, while all untagged traffic goes to VLAN 10:
 
@@ -394,6 +394,8 @@ When configuring the VLAN attributes for the bridge, specify the attributes for 
 
 The following example commands declare native VLAN 10 with IPv4 address 10.1.10.2/24 and IPv6 address 2001:db8::1/32.
 
+The NVUE and Linux commands also show an example with multiple VLAN-aware bridges.
+
 {{< tabs "TabID370 ">}}
 {{< tab "NCLU Commands ">}}
 
@@ -407,6 +409,9 @@ cumulus@switch:~$ net commit
 {{< /tab >}}
 {{< tab "NVUE Commands ">}}
 
+{{< tabs "TabID419 ">}}
+{{< tab "Single Bridge ">}}
+
 ```
 cumulus@switch:~$ nv set interface vlan10 ip address 10.1.10.2/24
 cumulus@switch:~$ nv set interface vlan10 ip address 2001:db8::1/32
@@ -414,7 +419,28 @@ cumulus@switch:~$ nv config apply
 ```
 
 {{< /tab >}}
+{{< tab "Multiple Bridges ">}}
+
+```
+cumulus@switch:~$ nv set interface bridge2_vlan10 type svi
+cumulus@switch:~$ nv set interface bridge2_vlan10 vlan 10
+cumulus@switch:~$ nv set interface bridge2_vlan10 base-interface bridge2
+cumulus@switch:~$ nv set interface bridge2_vlan10 ip address 10.1.10.2/24
+cumulus@switch:~$ nv set interface bridge1_vlan10 type svi
+cumulus@switch:~$ nv set interface bridge1_vlan10 vlan 10
+cumulus@switch:~$ nv set interface bridge1_vlan10 base-interface bridge1
+cumulus@switch:~$ nv set interface bridge1_vlan10 ip address 12.1.10.2/24
+cumulus@switch:~$ nv config apply
+```
+
+{{< /tab >}}
+{{< /tabs >}}
+
+{{< /tab >}}
 {{< tab "Linux Commands ">}}
+
+{{< tabs "TabID431 ">}}
+{{< tab "Single Bridge ">}}
 
 Edit the `/etc/network/interfaces` file, then run the `ifreload -a` command.
 
@@ -440,6 +466,28 @@ iface vlan10
 ```
 cumulus@switch:~$ ifreload -a
 ```
+
+{{< /tab >}}
+{{< tab "Multiple Bridges ">}}
+
+```
+auto bridge2_vlan10
+iface bridge2_vlan10
+    address 10.1.10.2/24
+    hwaddress 1c:34:da:1d:e6:fd
+    vlan-raw-device bridge2
+    vlan-id 10
+
+auto bridge1_vlan10
+iface bridge1_vlan10
+    address 12.1.10.2/24
+    hwaddress 1c:34:da:1d:e6:fd
+    vlan-raw-device bridge1
+    vlan-id 10
+```
+
+{{< /tab >}}
+{{< /tabs >}}
 
 {{< /tab >}}
 {{< /tabs >}}
@@ -593,11 +641,25 @@ Edit the `/etc/network/interfaces` file to **remove** the line `ipv6-addrgen off
 {{< /tab >}}
 {{< /tabs >}}
 
-## Example Configurations
+## Static MAC Address Entries
 
-The following sections provide example VLAN-aware bridge configurations.
+You can add a static MAC address entry to the layer 2 table for an interface within the VLAN-aware bridge by running a command similar to the following:
 
-### Access Ports and Pruned VLANs
+```
+cumulus@switch:~$ sudo bridge fdb add 12:34:56:12:34:56 dev swp1 vlan 150 master static
+cumulus@switch:~$ sudo bridge fdb show
+44:38:39:00:00:7c dev swp1 master bridge permanent
+12:34:56:12:34:56 dev swp1 vlan 150 master bridge static
+44:38:39:00:00:7c dev swp1 self permanent
+12:12:12:12:12:12 dev swp1 self permanent
+12:34:12:34:12:34 dev swp1 self permanent
+12:34:56:12:34:56 dev swp1 self permanent
+12:34:12:34:12:34 dev bridge master bridge permanent
+44:38:39:00:00:7c dev bridge vlan 500 master bridge permanent
+12:12:12:12:12:12 dev bridge master bridge permanent
+```
+
+## Example Configuration
 
 The following example configuration contains an access port and switch port that are *pruned*; they only send and receive traffic tagged to and from a specific set of VLANs declared by the `bridge-vids` attribute. It also contains other switch ports that send and receive traffic from all the defined VLANs.
 
@@ -644,111 +706,11 @@ iface swp49
 ...
 ```
 
-### Large Bond Set Configuration
-
-The configuration below shows a VLAN-aware bridge with a large set of bonds. The bond configurations are generated from a {{<exlink url="http://www.makotemplates.org/" text="Mako">}} template.
-
-```
-...
-#
-# vlan-aware bridge with bonds example
-#
-# uplink1, peerlink and downlink are bond interfaces.
-# 'bridge' is a vlan-aware bridge with ports uplink1, peerlink
-# and downlink (swp2-20).
-#
-# native vlan is by default 1
-#
-# 'bridge-vids' attribute is used to declare vlans.
-# 'bridge-pvid' attribute is used to specify native vlans if other than 1
-# 'bridge-access' attribute is used to declare access port
-#
-auto lo
-iface lo
-
-auto eth0
-iface eth0 inet dhcp
-
-# bond interface
-auto uplink1
-iface uplink1
-    bond-slaves swp32
-    bridge-vids 2000-2079
-
-# bond interface
-auto peerlink
-iface peerlink
-    bond-slaves swp30 swp31
-    bridge-vids 2000-2079 4094
-
-# bond interface
-auto downlink
-iface downlink
-    bond-slaves swp1
-    bridge-vids 2000-2079
-
-#
-# Declare vlans for all swp ports
-# swp2-20 get vlans from 2004 to 2022.
-# The below uses mako templates to generate iface sections
-# with vlans for swp ports
-#
-%for port, vlanid in zip(range(2, 20), range(2004, 2022)) :
-    auto swp${port}
-    iface swp${port}
-      bridge-vids ${vlanid}
-
-%endfor
-
-# svi vlan 2000
-auto bridge.2000
-iface bridge.2000
-    address 11.100.1.252/24
-
-# l2 attributes for vlan 2000
-auto bridge.2000
-vlan bridge.2000
-    bridge-igmp-querier-src 172.16.101.1
-
-#
-# vlan-aware bridge
-#
-auto bridge
-iface bridge
-    bridge-ports uplink1 peerlink downlink swp1 swp2 swp49 swp50
-    bridge-vlan-aware yes
-
-# svi peerlink vlan
-auto peerlink.4094
-iface peerlink.4094
-    address 192.168.10.1/30
-    broadcast 192.168.10.3
-...
-```
-
-### Static MAC Address Entries
-
-The following configuration adds a static MAC address entry to the layer 2 table for an interface within the VLAN-aware bridge by running a command similar to the following:
-
-```
-cumulus@switch:~$ sudo bridge fdb add 12:34:56:12:34:56 dev swp1 vlan 150 master static
-cumulus@switch:~$ sudo bridge fdb show
-44:38:39:00:00:7c dev swp1 master bridge permanent
-12:34:56:12:34:56 dev swp1 vlan 150 master bridge static
-44:38:39:00:00:7c dev swp1 self permanent
-12:12:12:12:12:12 dev swp1 self permanent
-12:34:12:34:12:34 dev swp1 self permanent
-12:34:56:12:34:56 dev swp1 self permanent
-12:34:12:34:12:34 dev bridge master bridge permanent
-44:38:39:00:00:7c dev bridge vlan 500 master bridge permanent
-12:12:12:12:12:12 dev bridge master bridge permanent
-```
-
 ## Considerations
 
 ### Spanning Tree Protocol (STP)
 
-- STP is enabled on a per-bridge basis; VLAN-aware mode supports a single instance of STP across all VLANs. A common practice when using a single STP instance for all VLANs is to define every VLAN on every switch in the spanning tree instance.
+- STP is enabled on a per-bridge basis.
 - `mstpd` remains the user space protocol daemon.
 - Cumulus Linux supports {{<link url="Spanning-Tree-and-Rapid-Spanning-Tree-STP" text="Rapid Spanning Tree Protocol (RSTP)">}}.
 

@@ -542,9 +542,7 @@ router bgp 64900 vrf vrf1012
 {{< /tab >}}
 {{< tab "NVUE Commands ">}}
 
-```
-cumulus@switch:~$ NEED COMMAND
-```
+NVUE commands are not supported.
 
 {{< /tab >}}
 {{< tab "vtysh Commands ">}}
@@ -656,10 +654,7 @@ router ospf vrf vrf1
 {{< /tab >}}
 {{< tab "NVUE Commands ">}}
 
-```
-cumulus@switch:~$ NEED COMMAND
-cumulus@switch:~$ 
-```
+NVUE commands are not supported.
 
 {{< /tab >}}
 {{< tab "vtysh Commands ">}}
@@ -789,8 +784,35 @@ router bgp 65001 vrf vrf1
 {{< tab "NVUE Commands ">}}
 
 ```
-cumulus@switch:~$ NEED COMMAND
-cumulus@switch:~$ 
+cumulus@switch:~$ nv set vrf vrf1 table auto
+cumulus@switch:~$ nv set vrf vrf1 loopback ip address 6.1.0.6/32
+cumulus@switch:~$ nv set vrf vrf1 loopback ip address 2001:6:1::6/128
+cumulus@switch:~$ nv set interface swp1 link speed 10G
+cumulus@switch:~$ nv set interface swp1 link auto-negotiate off
+cumulus@switch:~$ nv set interface swp1 ip vrf vrf1
+cumulus@switch:~$ nv set interface vlan101 ip address 20.1.6.1/24
+cumulus@switch:~$ nv set interface vlan101 ip address 2001:20:1:6::1/80
+cumulus@switch:~$ nv set bridge domain br_default
+cumulus@switch:~$ nv set bridge domain br_default vlan 101
+```
+
+Here is the FRRouting BGP configuration:
+
+```
+cumulus@switch:~$ nv set vrf vrf1 router bgp router-id 10.10.10.1
+cumulus@switch:~$ nv set vrf vrf1 router bgp autonomous-system 65001
+cumulus@switch:~$ nv set vrf vrf1 router bgp path-selection multipath aspath-ignore on 
+cumulus@switch:~$ nv set vrf vrf1 router bgp path-selection routerid-compare on 
+cumulus@switch:~$ nv set vrf vrf1 router bgp peer-group LEAF
+cumulus@switch:~$ nv set vrf vrf1 router bgp peer-group LEAF remote-as external 
+cumulus@switch:~$ nv set vrf vrf1 router bgp peer-group LEAF capabilities extended-nexthop on
+cumulus@switch:~$ nv set vrf vrf1 router bgp peer swp1.101 peer-group LEAF
+cumulus@switch:~$ nv set vrf vrf1 router bgp peer swp1.102 peer-group LEAF
+cumulus@switch:~$ nv set vrf vrf1 router bgp address-family ipv4-unicast redistribute connected enable on
+cumulus@switch:~$ nv set vrf vrf1 router bgp peer-group LEAF address-family ipv4-unicast enable on
+cumulus@switch:~$ nv set vrf vrf1 router bgp address-family ipv6-unicast redistribute connected enable on
+cumulus@switch:~$ nv set vrf vrf1 router bgp peer-group LEAF address-family ipv6-unicast enable on
+cumulus@switch:~$ nv config apply
 ```
 
 {{< /tab >}}
