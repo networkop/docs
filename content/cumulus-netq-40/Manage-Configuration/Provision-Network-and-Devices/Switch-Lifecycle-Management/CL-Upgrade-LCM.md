@@ -291,7 +291,7 @@ On successful completion, you can:
 
     {{<figure src="/images/netq/lcm-upgrade-switches-compare-snapshots-300.png" width="700">}}
 
-<div style="padding-left: 18px;">Refer to {{<link title="#interpreting-the-comparison-data" text="Interpreting the Comparison Data">}} for information about analyzing these results.</div>
+<div style="padding-left: 18px;">Refer to {{<link title="/Manage-Configuration/Provision-Network-and-Devices/Switch-Lifecycle-Management/Network-Snapshot-Management/#interpreting-the-comparison-data" text="Interpreting the Comparison Data">}} for information about analyzing these results.</div>
 
 - Download details about the upgrade in the form of a JSON-formatted file, by clicking **Download Report**.
 
